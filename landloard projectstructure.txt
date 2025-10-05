@@ -1,0 +1,17 @@
+domusone-landlord-dashboard/
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   ├── Sidebar.js
+│   │   ├── Header.js
+│   │   ├── Dashboard.js
+│   │   ├── TenantManagement.js
+│   │   ├── FinancialRecords.js
+│   │   ├── Announcements.js
+│   │   └── TenantForm.js
+│   ├── styles/
+│   │   └── App.css
+│   ├── App.js
+│   └── index.js
+└── package.json

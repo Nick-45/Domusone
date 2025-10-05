@@ -1,0 +1,10 @@
+domusone-tenant-app/
+├── src/
+│   ├── components/
+│   ├── screens/
+│   ├── services/
+│   ├── config/
+│   ├── navigation/
+│   └── styles/
+├── assets/
+└── App.js
