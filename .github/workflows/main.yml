@@ -1,15 +1,12 @@
-name: Build and Release DomusOne APK
+name: Build DomusOne APK
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-  workflow_dispatch:  # Allow manual triggers
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Build Android APK
     runs-on: ubuntu-latest
     
     steps:
@@ -22,21 +19,18 @@ jobs:
         node-version: '18'
         cache: 'npm'
         
-    - name: Setup Java
+    - name: Setup Java 17
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '11'
+        java-version: '17'
         
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-      
-    - name: Install dependencies
-      run: |
-        npm ci
-        cd android
-        ./gradlew dependencies
         
+    - name: Install dependencies
+      run: npm install
+      
     - name: Build APK
       run: |
         cd android
@@ -44,32 +38,8 @@ jobs:
         ./gradlew clean
         ./gradlew assembleRelease
         
-    - name: Upload APK artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: domusone-apk
-        path: android/app/build/outputs/apk/release/*.apk
-        retention-days: 30
-        
-    - name: Create Release
-      id: create_release
-      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ github.run_number }}
-        release_name: Release v${{ github.run_number }}
-        draft: false
-        prerelease: false
-        
-    - name: Upload Release APK
-      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: android/app/build/outputs/apk/release/app-release.apk
-        asset_name: DomusOne-Tenant-v${{ github.run_number }}.apk
-        asset_content_type: application/vnd.android.package-archive
+        name: domusone-app
+        path: android/app/build/outputs/apk/release/app-release.apk
